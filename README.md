@@ -14,3 +14,7 @@ Add all files to the given local repository
 Commit the files staged in the the local repository and prepare to push them to the remote repository
 
 ![image](https://user-images.githubusercontent.com/48307177/140643201-92426f9f-ffea-4ad4-a62c-578d9cd125b5.png)
+
+Data downloaded here, then convert sqlite to csv files
+
+https://www.kaggle.com/hugomathien/soccer
