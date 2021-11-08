@@ -22,6 +22,7 @@ import org.springframework.core.io.ClassPathResource;
 import com.vuntt1412.epldashboard.domain.Match;
 import com.vuntt1412.epldashboard.domain.staging.StagMatch;
 import com.vuntt1412.epldashboard.processor.MatchItemProcessor;
+import com.vuntt1412.epldashboard.tasklet.DemoTasklet;
 
 @Configuration
 @EnableBatchProcessing
@@ -158,18 +159,31 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Job importUserJob(JobCompletionNotificationListener listener, Step step1) {
-        return jobBuilderFactory.get("importUserJob")
-                .incrementer(new RunIdIncrementer())
-                .listener(listener)
-                .flow(step1)
-                .end()
+    public Step preStep() {
+        return this.stepBuilderFactory.get("preStep")
+                .tasklet(demoTasklet())
                 .build();
     }
 
     @Bean
-    public Step step1(JdbcBatchItemWriter<Match> writer) {
-        return stepBuilderFactory.get("step1")
+    public DemoTasklet demoTasklet() {
+        DemoTasklet tasklet = new DemoTasklet();
+        return tasklet;
+    }
+
+    @Bean
+    public Job job(JobCompletionNotificationListener listener, Step importMatchStep) {
+        return jobBuilderFactory.get("job")
+                .incrementer(new RunIdIncrementer())
+                .listener(listener)
+                .start(preStep())
+                .next(importMatchStep)
+                .build();
+    }
+
+    @Bean
+    public Step importMatchStep(JdbcBatchItemWriter<Match> writer) {
+        return stepBuilderFactory.get("importMatchStep")
                 .<StagMatch, Match>chunk(10)
                 .reader(reader())
                 .processor(processor())
