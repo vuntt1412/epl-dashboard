@@ -19,15 +19,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
+import com.vuntt1412.epldashboard.domain.League;
 import com.vuntt1412.epldashboard.domain.Match;
+import com.vuntt1412.epldashboard.domain.staging.StagLeague;
 import com.vuntt1412.epldashboard.domain.staging.StagMatch;
+import com.vuntt1412.epldashboard.processor.LeagueItemProcessor;
 import com.vuntt1412.epldashboard.processor.MatchItemProcessor;
 import com.vuntt1412.epldashboard.tasklet.DemoTasklet;
 
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
-    private static final String[] COLUMNS = {
+    private static final String[] COLUMNS_MATCH = {
             "id",
             "country_id",
             "league_id",
@@ -61,6 +64,7 @@ public class BatchConfiguration {
             "away_player_10",
             "away_player_11",
             "goal"};
+    private static final String[] COLUMNS_LEAGUES = {"id", "country_id", "name"};
     @Autowired
     public JobBuilderFactory jobBuilderFactory;
     @Autowired
@@ -73,7 +77,7 @@ public class BatchConfiguration {
                 .name("matchItemReader")
                 .resource(new ClassPathResource("Match.csv"))
                 .delimited()
-                .names(COLUMNS)
+                .names(COLUMNS_MATCH)
                 .fieldSetMapper(new BeanWrapperFieldSetMapper<StagMatch>() {{
                     setTargetType(StagMatch.class);
                 }})
@@ -172,11 +176,12 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Job job(JobCompletionNotificationListener listener, Step importMatchStep) {
+    public Job job(JobCompletionNotificationListener listener, Step importMatchStep, Step importLeagueStep) {
         return jobBuilderFactory.get("job")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
                 .start(preStep())
+                .next(importLeagueStep)
                 .next(importMatchStep)
                 .build();
     }
@@ -188,6 +193,43 @@ public class BatchConfiguration {
                 .reader(reader())
                 .processor(processor())
                 .writer(writer)
+                .build();
+    }
+
+    @Bean
+    public Step importLeagueStep(JdbcBatchItemWriter<League> writerLeague) {
+        return stepBuilderFactory.get("importLeagueStep")
+                .<StagLeague, League>chunk(10)
+                .reader(readerLeague())
+                .processor(processorLeague())
+                .writer(writerLeague)
+                .build();
+    }
+
+    @Bean
+    public FlatFileItemReader<StagLeague> readerLeague() {
+
+        return new FlatFileItemReaderBuilder<StagLeague>()
+                .name("leagueItemReader")
+                .resource(new ClassPathResource("League.csv"))
+                .delimited()
+                .names(COLUMNS_LEAGUES)
+                .fieldSetMapper(new BeanWrapperFieldSetMapper<StagLeague>() {{
+                    setTargetType(StagLeague.class);
+                }})
+                .build();
+    }
+
+    @Bean
+    public LeagueItemProcessor processorLeague() {
+        return new LeagueItemProcessor();
+    }
+
+    @Bean
+    public JdbcBatchItemWriter<League> writerLeague(DataSource dataSource) {
+        return new JdbcBatchItemWriterBuilder<League>()
+                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+                .sql("INSERT INTO LEAGUE (id,country_id,name) VALUES (:id,:countryId,:name)").dataSource(dataSource)
                 .build();
     }
 

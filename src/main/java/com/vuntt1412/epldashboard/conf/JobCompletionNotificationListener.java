@@ -26,6 +26,10 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
             log.info("!!! JOB FINISHED! Time to verify the results");
 
+            jdbcTemplate.query("SELECT COUNT(id) FROM LEAGUE",
+                    (rs, row) -> rs.getLong(1))
+                    .stream().findFirst()
+                    .ifPresentOrElse(i -> System.out.println("Found <" + i + "> leagues in the database."), () -> System.out.println("Found nothing!"));
             jdbcTemplate.query("SELECT COUNT(id) FROM MATCH",
                     (rs, row) -> rs.getLong(1))
                     .stream().findFirst()
