@@ -34,6 +34,10 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
                     (rs, row) -> rs.getLong(1))
                     .stream().findFirst()
                     .ifPresentOrElse(i -> System.out.println("Found <" + i + "> teams in the database."), () -> System.out.println("Found nothing!"));
+            jdbcTemplate.query("SELECT COUNT(id) FROM PLAYER",
+                    (rs, row) -> rs.getLong(1))
+                    .stream().findFirst()
+                    .ifPresentOrElse(i -> System.out.println("Found <" + i + "> players in the database."), () -> System.out.println("Found nothing!"));
             jdbcTemplate.query("SELECT COUNT(id) FROM MATCH",
                     (rs, row) -> rs.getLong(1))
                     .stream().findFirst()

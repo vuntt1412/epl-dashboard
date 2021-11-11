@@ -14,12 +14,15 @@ import org.springframework.context.annotation.Configuration;
 
 import com.vuntt1412.epldashboard.domain.League;
 import com.vuntt1412.epldashboard.domain.Match;
+import com.vuntt1412.epldashboard.domain.Player;
 import com.vuntt1412.epldashboard.domain.Team;
 import com.vuntt1412.epldashboard.domain.staging.StagLeague;
 import com.vuntt1412.epldashboard.domain.staging.StagMatch;
+import com.vuntt1412.epldashboard.domain.staging.StagPlayer;
 import com.vuntt1412.epldashboard.domain.staging.StagTeam;
 import com.vuntt1412.epldashboard.processor.LeagueItemProcessor;
 import com.vuntt1412.epldashboard.processor.MatchItemProcessor;
+import com.vuntt1412.epldashboard.processor.PlayerItemProcessor;
 import com.vuntt1412.epldashboard.processor.TeamItemProcessor;
 import com.vuntt1412.epldashboard.tasklet.DemoTasklet;
 
@@ -39,6 +42,10 @@ public class BatchConfiguration {
     private final TeamItemProcessor processorTeam;
     private final JdbcBatchItemWriter<Team> writerTeam;
 
+    private final FlatFileItemReader<StagPlayer> readerPlayer;
+    private final PlayerItemProcessor processorPlayer;
+    private final JdbcBatchItemWriter<Player> writerPlayer;
+
     @Autowired
     public BatchConfiguration(FlatFileItemReader<StagLeague> readerLeague,
                               LeagueItemProcessor processorLeague,
@@ -48,7 +55,7 @@ public class BatchConfiguration {
                               JdbcBatchItemWriter<Match> writerMatch,
                               FlatFileItemReader<StagTeam> readerTeam,
                               TeamItemProcessor processorTeam,
-                              JdbcBatchItemWriter<Team> writerTeam) {
+                              JdbcBatchItemWriter<Team> writerTeam, FlatFileItemReader<StagPlayer> readerPlayer, PlayerItemProcessor processorPlayer, JdbcBatchItemWriter<Player> writerPlayer) {
         this.readerLeague = readerLeague;
         this.processorLeague = processorLeague;
         this.writerLeague = writerLeague;
@@ -58,6 +65,9 @@ public class BatchConfiguration {
         this.readerTeam = readerTeam;
         this.processorTeam = processorTeam;
         this.writerTeam = writerTeam;
+        this.readerPlayer = readerPlayer;
+        this.processorPlayer = processorPlayer;
+        this.writerPlayer = writerPlayer;
     }
 
     @Autowired
@@ -87,6 +97,7 @@ public class BatchConfiguration {
                 .start(preStep())
                 .next(importLeagueStep)
                 .next(importTeamStep)
+                .next(importPlayerStep())
                 .next(importMatchStep)
                 .build();
     }
@@ -118,6 +129,16 @@ public class BatchConfiguration {
                 .reader(readerTeam)
                 .processor(processorTeam)
                 .writer(writerTeam)
+                .build();
+    }
+
+    @Bean
+    public Step importPlayerStep() {
+        return stepBuilderFactory.get("importPlayerStep")
+                .<StagPlayer, Player>chunk(10)
+                .reader(readerPlayer)
+                .processor(processorPlayer)
+                .writer(writerPlayer)
                 .build();
     }
 
