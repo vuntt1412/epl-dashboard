@@ -1,5 +1,6 @@
 package com.vuntt1412.epldashboard.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +10,7 @@ import com.vuntt1412.epldashboard.service.MatchService;
 import com.vuntt1412.epldashboard.service.TeamService;
 
 @RestController
+@CrossOrigin
 public class TeamController {
 
     private final TeamService teamService;
