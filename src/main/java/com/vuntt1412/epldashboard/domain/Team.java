@@ -1,7 +1,10 @@
 package com.vuntt1412.epldashboard.domain;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class Team {
@@ -10,6 +13,17 @@ public class Team {
     private Long teamId;
     private String teamLongName;
     private String teamShortName;
+
+    @Transient
+    private List<Match> latestMatches;
+
+    public List<Match> getLatestMatches() {
+        return latestMatches;
+    }
+
+    public void setLatestMatches(List<Match> latestMatches) {
+        this.latestMatches = latestMatches;
+    }
 
     public Long getId() {
         return id;
