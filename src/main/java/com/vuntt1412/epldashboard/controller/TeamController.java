@@ -5,10 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.vuntt1412.epldashboard.domain.League;
 import com.vuntt1412.epldashboard.domain.Match;
@@ -34,22 +31,34 @@ public class TeamController {
     @GetMapping("/team/{teamName}")
     public Team getTeam(@PathVariable String teamName) {
         Team team = teamService.getTeam(teamName);
-
         List<Match> latestMatches = matchService.getLatestMatches(team.getTeamId(), 5);
+        loadTransientMatchFields(latestMatches);
+        team.setLatestMatches(latestMatches);
+
+        return team;
+    }
+
+    @GetMapping("/team/{teamName}/matches")
+    public List<Match> getMatchesOfTeam(@PathVariable String teamName, @RequestParam int year) {
+        List<Match> matches = matchService.getMatchesOfTeamInSeason(teamName, year);
+        loadTransientMatchFields(matches);
+
+        return matches;
+    }
+
+    private void loadTransientMatchFields(List<Match> matches) {
         List<Long> teamIds = Stream.concat(
-                latestMatches.stream().map(Match::getHomeTeamId),
-                latestMatches.stream().map(Match::getAwayTeamId))
+                matches.stream().map(Match::getHomeTeamId),
+                matches.stream().map(Match::getAwayTeamId))
                 .collect(Collectors.toList());
         Map<Long, String> teamNameByIds = teamService.getTeamNameByIds(teamIds);
-        String leagueName = leagueService.getLeague(latestMatches.stream().map(Match::getLeagueId).findFirst().orElse(null))
+        String leagueName = leagueService.getLeague(matches.stream().map(Match::getLeagueId).findFirst().orElse(null))
                 .map(League::getName).orElse(null);
-        latestMatches.stream().forEach(match -> {
+
+        matches.stream().forEach(match -> {
             match.setHomeTeamName(teamNameByIds.get(match.getHomeTeamId()));
             match.setAwayTeamName(teamNameByIds.get(match.getAwayTeamId()));
             match.setLeagueName(leagueName);
         });
-        team.setLatestMatches(latestMatches);
-
-        return team;
     }
 }

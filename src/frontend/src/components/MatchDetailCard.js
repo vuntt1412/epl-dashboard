@@ -1,10 +1,10 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 
-export const MatchDetailCard = ({match, homeTeamId}) => {
+export const MatchDetailCard = ({match, teamName}) => {
     if (!match) return null;
 
-    const awayTeam = match.homeTeamId === homeTeamId ? match.awayTeamName : match.homeTeamName;
+    const awayTeam = match.homeTeamName === teamName ? match.awayTeamName : match.homeTeamName;
     const awayTeamRoute = `/teams/${awayTeam}`;
 
     return (

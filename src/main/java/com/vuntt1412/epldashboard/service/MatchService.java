@@ -13,4 +13,13 @@ public interface MatchService {
      * @return
      */
     List<Match> getLatestMatches(Long teamId, Integer number);
+
+    /**
+     * get all of the matches of the team in the given season. E.g. 2015 -> 2015/2016
+     *
+     * @param teamName
+     * @param year
+     * @return
+     */
+    List<Match> getMatchesOfTeamInSeason(String teamName, int year);
 }

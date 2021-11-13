@@ -33,9 +33,9 @@ export const TeamPage = () => {
         <div className="TeamPage">
             <h1>{team.teamLongName}</h1>
             <p>{team.latestMatches[0].leagueName}</p>
-            <MatchDetailCard match={team.latestMatches[0]} homeTeamId={team.teamId}/>
+            <MatchDetailCard match={team.latestMatches[0]} teamName={teamName}/>
             {team.latestMatches && team.latestMatches.slice(1).map(m => <MatchDetailSmallCard match={m}
-                                                                                              homeTeamId={team.teamId}/>)}
+                                                                                              teamName={teamName}/>)}
         </div>
     );
 }
