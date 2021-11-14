@@ -43,7 +43,10 @@ export const TeamPage = () => {
                         {title: 'Ties', value: team.totalMatches - team.totalWins - team.totalLosses, color: '#ffffe6'},
                         {title: 'Losses', value: team.totalLosses, color: '#ffe6e6'},
                         {title: 'Wins', value: team.totalWins, color: '#e6ffff'},
-                    ]} style={{height: '110px'}}
+                    ]}
+                    style={{height: '110px'}}
+                    label={({dataEntry}) => Math.round(dataEntry.percentage) + '%'}
+                    labelStyle={{fontSize: '10px', fontFamily: 'sans-serif'}}
                 />
             </div>
             <div className="match-detail-card-section">
