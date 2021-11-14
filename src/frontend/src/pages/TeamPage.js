@@ -1,3 +1,4 @@
+import './TeamPage.scss';
 import {React, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {MatchDetailCard} from "../components/MatchDetailCard";
@@ -31,11 +32,20 @@ export const TeamPage = () => {
 
     return (
         <div className="TeamPage">
-            <h1>{team.teamLongName}</h1>
-            <p>{team.latestMatches[0].leagueName}</p>
-            <MatchDetailCard match={team.latestMatches[0]} teamName={teamName}/>
+            <div className="team-name-section">
+                <p>{team.latestMatches[0].leagueName}</p>
+                <div className="team-name"><h1>{team.teamLongName}</h1></div>
+            </div>
+            <div className="team-statistic-section">Statistic</div>
+            <div className="match-detail-card-section">
+                <h5>Latest matches</h5>
+                <MatchDetailCard match={team.latestMatches[0]} teamName={teamName}/>
+            </div>
             {team.latestMatches && team.latestMatches.slice(1).map(m => <MatchDetailSmallCard match={m}
                                                                                               teamName={teamName}/>)}
+            <div>
+                <a href="#">More</a>
+            </div>
         </div>
     );
 }

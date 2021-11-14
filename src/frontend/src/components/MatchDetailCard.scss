@@ -1,0 +1,14 @@
+.MatchDetailCard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  .match-result, .match-date {
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+
+    & > p {
+      color: darkgray;
+    }
+  }
+}
