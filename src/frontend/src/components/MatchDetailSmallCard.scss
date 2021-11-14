@@ -1,8 +1,13 @@
 .MatchDetailSmallCard {
-  grid-column: span 4;
+  grid-column: span 2;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr;
+  align-self: end;
+
+  .match-opponent {
+    align-self: center;
+  }
 
   .match-result, .match-date {
     justify-self: center;
