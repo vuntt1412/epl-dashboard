@@ -21,4 +21,11 @@ public interface TeamService {
      * @return
      */
     Map<Long, String> getTeamNameByIds(List<Long> teamIds);
+
+    /**
+     * get all the teams
+     *
+     * @return
+     */
+    Iterable<Team> getAllTeams();
 }

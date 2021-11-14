@@ -76,4 +76,9 @@ public class TeamController {
             match.setLeagueName(leagueName);
         });
     }
+
+    @GetMapping("/team")
+    public Iterable<Team> getAllTeams() {
+        return teamService.getAllTeams();
+    }
 }

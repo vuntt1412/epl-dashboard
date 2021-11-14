@@ -30,4 +30,9 @@ public class TeamServiceImpl implements TeamService {
                 .stream()
                 .collect(Collectors.toMap(TeamNamesOnly::getTeamId, TeamNamesOnly::getTeamLongName));
     }
+
+    @Override
+    public Iterable<Team> getAllTeams() {
+        return teamRepository.findAll();
+    }
 }
