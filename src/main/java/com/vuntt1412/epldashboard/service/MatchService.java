@@ -1,6 +1,7 @@
 package com.vuntt1412.epldashboard.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.vuntt1412.epldashboard.domain.Match;
 
@@ -22,4 +23,12 @@ public interface MatchService {
      * @return
      */
     List<Match> getMatchesOfTeamInSeason(String teamName, int year);
+
+    /**
+     * calculate team stats by historical matches
+     *
+     * @param teamId
+     * @return
+     */
+    Map<String, Map<String, Integer>> calculateTeamStats(Long teamId);
 }

@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.vuntt1412.epldashboard.domain.Match;
+import com.vuntt1412.epldashboard.projection.MatchStatsOnly;
 
 public interface MatchRepository extends CrudRepository<Match, Long> {
 
@@ -15,5 +16,7 @@ public interface MatchRepository extends CrudRepository<Match, Long> {
 
     @Query(value = "select m.* from MATCH m where (m.home_team_id = :teamId or m.away_team_id = :teamId) and m.season = :season order by date desc", nativeQuery = true)
     List<Match> findByHomeTeamIdOrAwayTeamIdAndSeasonOrderByDateDesc(@Param("teamId") Long teamId, @Param("season") String season);
+
+    List<MatchStatsOnly> findByHomeTeamIdOrAwayTeamId(Long homeTeamId, Long awayTeamId);
 
 }

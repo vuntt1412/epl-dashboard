@@ -17,6 +17,37 @@ public class Team {
     @Transient
     private List<Match> latestMatches;
 
+    @Transient
+    private Integer totalMatches;
+    @Transient
+    private Integer totalWins;
+    @Transient
+    private Integer totalLosses;
+
+    public Integer getTotalMatches() {
+        return totalMatches;
+    }
+
+    public void setTotalMatches(Integer totalMatches) {
+        this.totalMatches = totalMatches;
+    }
+
+    public Integer getTotalWins() {
+        return totalWins;
+    }
+
+    public void setTotalWins(Integer totalWins) {
+        this.totalWins = totalWins;
+    }
+
+    public Integer getTotalLosses() {
+        return totalLosses;
+    }
+
+    public void setTotalLosses(Integer totalLosses) {
+        this.totalLosses = totalLosses;
+    }
+
     public List<Match> getLatestMatches() {
         return latestMatches;
     }

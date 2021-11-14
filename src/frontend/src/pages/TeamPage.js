@@ -40,11 +40,11 @@ export const TeamPage = () => {
             <div className="team-statistic-section">
                 <PieChart
                     data={[
-                        {title: 'Wins', value: 10, color: '#E38627'},
-                        {title: 'Losses', value: 15, color: '#C13C37'},
-                        {title: 'Ties', value: 20, color: '#6A2135'},
-                    ]}
-                />;
+                        {title: 'Ties', value: team.totalMatches - team.totalWins - team.totalLosses, color: '#ffffe6'},
+                        {title: 'Losses', value: team.totalLosses, color: '#ffe6e6'},
+                        {title: 'Wins', value: team.totalWins, color: '#e6ffff'},
+                    ]} style={{height: '110px'}}
+                />
             </div>
             <div className="match-detail-card-section">
                 <h5>Latest matches</h5>

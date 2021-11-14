@@ -35,7 +35,22 @@ public class TeamController {
         loadTransientMatchFields(latestMatches);
         team.setLatestMatches(latestMatches);
 
+        Map<String, Map<String, Integer>> teamStats = matchService.calculateTeamStats(team.getTeamId());
+        team.setTotalMatches(getNumberOfMatchesByCondition(teamStats, null));
+        team.setTotalLosses(getNumberOfMatchesByCondition(teamStats, "Losses"));
+        team.setTotalWins(getNumberOfMatchesByCondition(teamStats, "Wins"));
+
         return team;
+    }
+
+    private int getNumberOfMatchesByCondition(Map<String, Map<String, Integer>> teamStats, String result) {
+        return teamStats.values()
+                .stream()
+                .flatMap(map -> map.entrySet().stream())
+                .filter(entry -> result == null || result.equals(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .mapToInt(Integer::valueOf)
+                .sum();
     }
 
     @GetMapping("/team/{teamName}/matches")
