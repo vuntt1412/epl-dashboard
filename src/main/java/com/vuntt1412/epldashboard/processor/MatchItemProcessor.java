@@ -29,7 +29,7 @@ public class MatchItemProcessor implements ItemProcessor<StagMatch, Match> {
         match.setHomeTeamId(Long.valueOf(stagMatch.getHome_team_api_id()));
         match.setAwayTeamId(Long.valueOf(stagMatch.getAway_team_api_id()));
         match.setHomeTeamGoal(Integer.valueOf(stagMatch.getHome_team_goal()));
-        match.setAwayTeamGoal(Integer.valueOf(stagMatch.getHome_team_goal()));
+        match.setAwayTeamGoal(Integer.valueOf(stagMatch.getAway_team_goal()));
         match.setHomePlayer1(convertToLong(stagMatch.getHome_player_1()));
         match.setHomePlayer2(convertToLong(stagMatch.getHome_player_2()));
         match.setHomePlayer3(convertToLong(stagMatch.getHome_player_3()));
