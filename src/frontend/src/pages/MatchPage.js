@@ -1,6 +1,8 @@
 import {React, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {MatchDetailCard} from "../components/MatchDetailCard";
+import './MatchPage.scss'
+import {YearSelector} from "../components/YearSelector";
 
 export const MatchPage = () => {
 
@@ -18,15 +20,21 @@ export const MatchPage = () => {
             }
             fetchMatches();
 
-        }, []
+        }, [teamName, year]
     );
 
     return (
         <div className="MatchPage">
-            <h1>MatchPage</h1>
-            {
-                matches.map(m => <MatchDetailCard match={m} teamName={teamName}/>)
-            }
+            <div className="year-selector">
+                <h3>Year</h3>
+                <YearSelector teamName={teamName}/>
+            </div>
+            <div>
+                <h3>Matches</h3>
+                {
+                    matches.map(m => <MatchDetailCard match={m} teamName={teamName}/>)
+                }
+            </div>
         </div>
     );
 }
