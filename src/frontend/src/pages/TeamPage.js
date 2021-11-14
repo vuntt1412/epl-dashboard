@@ -15,14 +15,14 @@ export const TeamPage = () => {
     // before return the jsx snippet below, call useEffect and then pass in the function needs to execute when this component loads
     useEffect(
         () => {
-            const fetchMatches = async () => {
+            const fetchTeam = async () => {
                 const response = await fetch(`http://localhost:8080/team/${teamName}`);//fetch returns a promise
                 const data = await response.json();
                 console.log(data)
                 setTeam(data);
 
             }
-            fetchMatches();
+            fetchTeam();
 
         }, [teamName]
     );
