@@ -3,6 +3,7 @@ package com.vuntt1412.epldashboard.security;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 /**
  * Adding spring-boot-starter-security dependency enables authentication for the application, which includes a login form, and a user and a default password.
@@ -19,7 +20,7 @@ public class ApplicationConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("user1")
-                .password("user1")
+                .password(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("user1"))
                 .roles("USER");
     }
 }
