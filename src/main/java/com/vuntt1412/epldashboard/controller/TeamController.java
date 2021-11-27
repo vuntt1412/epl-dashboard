@@ -81,4 +81,14 @@ public class TeamController {
     public Iterable<Team> getAllTeams() {
         return teamService.getAllTeams();
     }
+
+    @GetMapping("/")
+    public String welcome() {
+        return "welcome all you guys";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "welcome admin";
+    }
 }

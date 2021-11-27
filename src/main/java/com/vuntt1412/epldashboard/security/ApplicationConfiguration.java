@@ -1,6 +1,7 @@
 package com.vuntt1412.epldashboard.security;
 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -18,9 +19,24 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 public class ApplicationConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // AuthenticationManagerBuilder used to create an AuthenticationManager
         auth.inMemoryAuthentication()
+                .withUser("admin")
+                .password(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("admin"))
+                .roles("ADMIN")
+                .and()
                 .withUser("user1")
                 .password(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("user1"))
                 .roles("USER");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // HttpSecurity lets us configure paths and restrictions for those paths
+        http.authorizeRequests()
+                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/team/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/").permitAll()
+                .and().formLogin();
     }
 }
